@@ -2,7 +2,7 @@
 This project sets up a complete CI/CD pipeline using Jenkins and Docker, with deployment via Docker Compose and Kubernetes (EKS). It includes image scanning tools like Trivy and Docker Scout, and SonarQube for code quality.
 
 #📋 Prerequisites
-AWS EC2 Instance: Name: HR-Leave-App OS: Ubuntu Instance Type: t2.medium or t2.large Storage: 30GB Key Pair: vikas-key
+AWS EC2 Instance: Name: HR-Leave-App OS: Ubuntu Instance Type: t2.medium or t2.large Storage: 30GB Key Pair: rohit-key
 
 ```
 #!/bin/bash
@@ -68,4 +68,69 @@ sudo apt-get update
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 ```
+check docker status
+```
+docker --version
+```
+add current user into the docker group
+```
+usermod -aG docker $USER
+```
+verify user added or not
+```
+cat /etc/group | grep docker
+```
+give permisions to the docker sock
+```
+chmod 666 /var/run/docker.sock
+```
+now we need to install docker compose. use following command to install docker compose
+```
+sudo curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+```
+give permissios to docker-compose
+```
+chmod +x /usr/local/bin/docker-compose
+```
+check version of docker compose.
+```
+docker-compose --version
+```
+now we need to login into your docker hub repo to store our images inside to docker hub.
+```
+docker login -u ghandgevikas
+```
+then add password of dockerhub.
 
+now we to install trivy as image and files scanner to check vaulnarbalities.
+
+vi trivy.sh
+```
+#!/bin/bash
+sudo apt-get install wget apt-transport-https gnupg
+wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+sudo apt-get update
+sudo apt-get install trivy
+```
+then install docker scout it is also security checker tool. run below give command to install docker scout.
+```
+curl -sSfL https://raw.githubusercontent.com/docker/scout-cli/main/install.sh | sh
+```
+move dokcer scout into the /usr/local/bin/
+```
+sudo mv /root/.docker/cli-plugins/docker-scout /usr/local/bin/docker-scout
+```
+now we have to run docker container of sonarqube this source code quality checker tool checks the insecurity, bugs, duplications inside the code.
+
+run container useing following docker command.
+```
+docker run -d --name sonar -p 9000:9000 sonarqube:lts-community
+```
+check contanier running or not using command.
+```
+docker ps
+```
+now we have setup tools now we need to setup jenkins plugins. login inside jenkins go to dashboard --> manage jenkins --> plugins --> available plugins downloade below plugins.
+
+SonarQube scanner, Docker, Docker Commons, Docker Pipeline, Docker API, docker-build-step, Pipeline stage view, Email Extension Template, Kubernetes, Kubernetes CLI, Kubernetes Client API, Kubernetes Credentials, Kubernetes Credentials Provider, Config File Provider, Prometheus metrics, BlueOcean, Eclipse Temurin Installer, Owasp Dependency Check. aws cli.
