@@ -134,3 +134,6 @@ docker ps
 now we have setup tools now we need to setup jenkins plugins. login inside jenkins go to dashboard --> manage jenkins --> plugins --> available plugins downloade below plugins.
 
 SonarQube scanner, Docker, Docker Commons, Docker Pipeline, Docker API, docker-build-step, Pipeline stage view, Email Extension Template, Kubernetes, Kubernetes CLI, Kubernetes Client API, Kubernetes Credentials, Kubernetes Credentials Provider, Config File Provider, Prometheus metrics, BlueOcean, Eclipse Temurin Installer, Owasp Dependency Check. aws cli.
+
+🔧 Jenkins Plugins Used in This Project
+Below is the list of key plugins integrated into this Jenkins setup, making it powerful and flexible for CI/CD, Docker, Kubernetes, security, and monitoring.
